@@ -1,0 +1,22 @@
+BODY {
+	margin: 10px;
+	font-size: 15px;
+}
+
+#login {
+	background-image:url('../img/login.jpg');
+	background-position:center; 
+	background-repeat:no-repeat;
+	position:relative;		
+}
+
+#loginForm {
+	width: 60%;
+	margin-left:20%;
+	margin-bottom:20%;
+	padding:1%;
+	font-weight: bold;
+	color: #FFFFFF;
+	position:absolute;
+	bottom: 0;
+}
