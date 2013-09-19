@@ -1,16 +1,24 @@
 BODY {
-	margin: 10px;
+	
 	font-size: 15px;
 }
 
-#login {
+
+a{
+  	text-decoration: none;
+  	color: #83b321;
+  }
+
+
+
+#login, #informacion {
 	background-image:url('../img/login.jpg');
 	background-position:center; 
 	background-repeat:no-repeat;
 	position:relative;		
 }
 
-#loginForm {
+#login #loginForm {
 	width: 60%;
 	margin-left:20%;
 	margin-bottom:20%;
@@ -20,3 +28,65 @@ BODY {
 	position:absolute;
 	bottom: 0;
 }
+
+#registro {
+	background-image:url('../img/registro.jpg');
+	background-position:center; 
+	
+	position:relative;		
+}
+
+#registro #registroForm {
+	width: 60%;
+	margin-left:20%;
+	margin-bottom:20%;
+	padding:1%;
+	font-weight: bold;
+	color: #FFFFFF;
+	position:absolute;
+	bottom: 0;
+}
+
+#informacion #divInformacion {
+	width: 90%;
+	margin:0 auto;
+	margin-top:20%;
+	font-weight: bold;
+	background-color: #FFFFFF;
+	text-align: left;
+	padding: 0;
+}
+#divInformacion #infoInfoDesc
+{
+	padding: 10px;
+}
+
+#inicio #divFooterInicio
+{
+	padding:10px
+}
+
+#divProyectos ul
+{
+	padding-top: 2px;
+	padding-bottom: 5px;
+}
+
+#divPrograma {
+    position: relative;
+    z-index: 1;
+}
+/*
+#divPrograma .divProgramaBG {
+  
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    
+    opacity: .4;
+    width: 100%;
+    height: 100%;
+}
+    */
