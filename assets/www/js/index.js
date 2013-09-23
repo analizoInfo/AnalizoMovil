@@ -8,7 +8,22 @@ var proyectoSel;
 $(document).ready(function () {
     // Handler for .ready() called.
     document.addEventListener("deviceready", onDeviceReady, true);
+    
 });
+
+function exitAppPopup() {
+    navigator.notification.confirm(
+          'Exit PhoneGap ' + device.cordova + ' Demo?'
+        , function(button) {
+              if (button == 2) {
+                  navigator.app.exitApp();
+              } 
+          }
+        , 'Exit'
+        , 'No,Yes'
+    );  
+    return false;
+}
 
 function onDeviceReady() {
     //console.log('deviceready');
@@ -37,6 +52,18 @@ function onDeviceReady() {
             }
         }
     });
+    
+    document.addEventListener("backbutton", function(e){
+        if(($.mobile.activePage.is('#inicio')) ||
+        		($.mobile.activePage.is('#login'))){
+            e.preventDefault();
+            navigator.app.exitApp();
+        }
+        else {
+            navigator.app.backHistory();
+        }
+     }, false);
+    
 }
 
 $(document).on("mobileinit", function () {
@@ -45,17 +72,76 @@ $(document).on("mobileinit", function () {
 });
 
 function CrearLista(data) {
+	var inTimeProyects = 0;
+    var outTimeProyects = 0;
+    var comprobar = -1;
     var enEmision = [];
     var enFuturo = [];
     data.resetEntityPointer();
+    now = new Date();
+    var weekday = new Array(7);
+    weekday[0] = "Sunday";
+    weekday[1] = "Monday";
+    weekday[2] = "Tuesday";
+    weekday[3] = "Wednesday";
+    weekday[4] = "Thursday";
+    weekday[5] = "Friday";
+    weekday[6] = "Saturday";
+
+    var weekday_sp = new Array(7);
+    weekday_sp[0] = "Domingo";
+    weekday_sp[1] = "Lunes";
+    weekday_sp[2] = "Martes";
+    weekday_sp[3] = "Miércoles";
+    weekday_sp[4] = "Jueves";
+    weekday_sp[5] = "Viernes";
+    weekday_sp[6] = "Sábado";
+
+    var now_day = weekday[now.getDay()];
+    
     while (data.hasNextEntity()) {
         var proyect = data.getNextEntity();
-        enEmision.push(proyect);
+        var proyect_day = proyect.get(now_day);
+
+        nextDay = now.getDay();
+        while (!proyect.get(weekday[nextDay])) {
+            nextDay = nextDay + 1;
+            if (nextDay == 7) { nextDay = 0; }
+        }
+        
+        if (proyect_day) {
+
+            var hora = '';
+            var inicio_p = '';
+            var fin_p = '';
+
+            if (now.getMinutes() < 10) { hora = '' + now.getHours() + '0' + now.getMinutes() }
+            else { hora = '' + now.getHours() + '' + now.getMinutes() }
+
+            inicio_p = '' + proyect.get('HoraInicio') + '' + proyect.get('MinutoInicio');
+            fin_p = '' + proyect.get('HoraFin') + '' + proyect.get('MinutoFin');
+
+            if (parseInt(hora) >= parseInt(inicio_p)) {
+                if (parseInt(hora) <= parseInt(fin_p)) {
+                    comprobar = 1;
+
+                } else { comprobar = 0; }
+            } else { comprobar = 0; }
+        } else { comprobar = 0; }
+        if (comprobar) {
+            inTimeProyects = inTimeProyects + 1;        
+            enEmision.push(proyect);
+        }
+        else {
+            outTimeProyects = outTimeProyects + 1;
+            enFuturo.push(proyect);
+        }
     }
 
     var lEnEmision;
     if (enEmision.length > 0) {
-        lEnEmision = '<ul data-role="listview"><li data-role="list-divider">Ahora puedes analizar</li>';
+       // lEnEmision = '<ul data-role="listview"><li data-role="list-divider">Ahora puedes analizar</li>';
+    	lEnEmision = '<div data-role="collapsible" data-collapsed="false" data-content-theme="c"> <h3>Ahora puedes analizar</h3><ul data-role="listview">'
         for (var i = 0; i < enEmision.length; i++) {
             var pro = enEmision[i];
             name = pro.get('name');
@@ -70,43 +156,66 @@ function CrearLista(data) {
                     '</a>' +
                     '</li>';
         }
-        lEnEmision += '</ul>';
+        lEnEmision += '</ul></div>';
     }
     else
-        lEnEmision = '<ul data-role="listview"><li data-role="list-divider">No existen proyectos para analizar en este horario</li></ul>';
+        lEnEmision = '<div data-role="collapsible" data-collapsed="false" data-content-theme="c"> <h3>No existen proyectos para analizar en este horario</h3></div>';
 
     var lEnFuturo;
     if (enFuturo.length > 0) {
-        lEnFuturo = '<ul data-role="listview"><li data-role="list-divider">Proximos analis</li>';
+    	/*
+    	 * <div data-role="collapsible" data-collapsed="false"> <h3>Proximos analis</h3>
+                                
+            </div>
+    	 */
+    	
+        //lEnFuturo = '<ul data-role="listview"><li data-role="list-divider">Proximos analis</li>';
+    	lEnFuturo = '<div data-role="collapsible" data-collapsed="false" data-content-theme="c"> <h3>Proximos analis</h3><ul data-role="listview">';
         for (var i = 0; i < enFuturo.length; i++) {
             var pro = enFuturo[i];
             name = pro.get('name');
             descripcion = pro.get('program');
             imagen = pro.get('Imagen');
             pregunta = pro.get('Pregunta');
-            lEnEmision += '<li data-id=' + name + '>' +
-                    '<a href="#verPrograma?id=' + name + '">' +
+            lEnFuturo += '<li data-id=' + name + '>' +
+                    //'<a href="#verPrograma?id=' + name + '">' +
+            		'<a>' +
                     '<img src=' + imagen + ' class="ui-li-thumb"/>' +
                     '<h3>' + descripcion + '</h3>' +
                      '<p>' + pregunta + '</p>' +
                     '</a>' +
                     '</li>';
         }
-        lEnFuturo += '</ul>';
+        lEnFuturo += '</ul></div>';
     }
     else
-        lEnFuturo = '<ul data-role="listview"><li data-role="list-divider">No existen proyectos proximamente</li></ul>';
-
-    $("#divProyectos").html(lEnEmision + lEnFuturo);
+        lEnFuturo = '<div data-role="collapsible" data-collapsed="false" data-content-theme="c"> <h3>No existen proyectos proximamente</h3></div>';
+    
+    $("#divProyectos").html(lEnEmision + lEnFuturo); //
     $('#divProyectos').trigger("create");
 }
 
-function showError(err) {
-    $("#errorL").empty();
-    $("#errorL").append(err);
-    $("#errorL").css('background-color', '#c13d3d');
-    $("#errorL").fadeIn();
-    setTimeout(function () { $("#errorL").fadeOut(); }, 2000);
+
+function MostrarMensaje(msg, esError) {
+    var color = "#83b321";
+    console.log(msg);
+    if (esError)
+        color = "#c13d3d";
+	$("<div class='ui-loader ui-overlay-shadow ui-body-e ui-corner-all'><h3>"+msg+"</h3></div>")
+	.css({ display: "block", 
+	"background-color": color,
+		opacity: 0.90, 
+		position: "fixed",
+		padding: "7px",
+		"text-align": "center",
+		width: "270px",
+		left: ($(window).width() - 284)/2,
+		top: $(window).height()/2 })
+	.appendTo( $.mobile.pageContainer ).delay( 1500 )
+	.fadeOut( 400, function(){
+		$(this).remove();
+	});
+	console.log(msg);
 }
 
 $.urlParam = function (url, name) {
@@ -117,7 +226,7 @@ $.urlParam = function (url, name) {
 
 function LogearUsuario(usuario, pasword, rec) {
     var logged = client.isLoggedIn();
-    
+
     if (logged && (usuario == '')) {
         userName = window.localStorage.getItem('username');
         //alert(userName);
@@ -125,34 +234,34 @@ function LogearUsuario(usuario, pasword, rec) {
     }
     else {
         client.logout();
-       client.login(usuario, pasword,
-			function (err) {
-			    if (err) {
-			        alert('El usuario o contraseña no son correctos');
-			    }
-			    else {
-			        var token = client.token;
-			        
-			        client.getLoggedInUser(function (err, data, user) {
-			            if (err) {
-			                alert(err);
-			            } else {
-			            	
-			                userName = user.get('username');
-			                if (rec) {
-			                    window.localStorage.setItem('username', userName);
-			                    //alert(window.localStorage.getItem('username'));
-			                }
-			                $.mobile.changePage("#inicio", "slide", false, true);
-			            }
-			        });
+        client.login(usuario, pasword,
+             function (err) {
+                 if (err) {
+                     alert('El usuario o contraseña no son correctos');
+                 }
+                 else {
+                     var token = client.token;
 
-			    }
-			}
-	    );
+                     client.getLoggedInUser(function (err, data, user) {
+                         if (err) {
+                             alert(err);
+                         } else {
+
+                             userName = user.get('username');
+                             if (rec) {
+                                 window.localStorage.setItem('username', userName);
+                                 //alert(window.localStorage.getItem('username'));
+                             }
+                             $.mobile.changePage("#inicio", "slide", false, true);
+                         }
+                     });
+
+                 }
+             }
+         );
     }
 }
-/*
+
 function doCheckIn(indice, categoria) {
     //$("#alerta").fadeIn();
 
@@ -167,6 +276,7 @@ function doCheckIn(indice, categoria) {
 
         }
         else {
+            console.log('ObtenerProyecto');
             var hora = '';
             var inicio_p = '';
             var fin_p = '';
@@ -176,70 +286,73 @@ function doCheckIn(indice, categoria) {
             fin_p = '' + proyecto.get('HoraFin') + '' + proyecto.get('MinutoFin');
             if (parseInt(hora) >= parseInt(inicio_p)) {
                 if (parseInt(hora) <= parseInt(fin_p)) {
-                    client.getEntity(proyect_load, function (err, proyecto) {
+                    /* client.getEntity(proyect_load, function (err, proyecto) {
+                         if (err) {
+ 
+                         }
+                         else { */
+                    //aqui
+                    var resultados = proyecto.get('Resultados');
+                    var options = {
+                        type: resultados
+                    }
+                    client.createCollection(options, function (err, checkin) {
                         if (err) {
-
+                        	console.log('could not make collection');
                         }
                         else {
-                            //aqui
-                            var resultados = proyecto.get('Resultados');
+                           
+                            console.log('createCollection');
+                            now = new Date();
+                            //create a new dog and add it to the collection
                             var options = {
-                                type: resultados
+                                name: now.toString() + '-' + proyecto.get('name') + '-' + userName,
+                                categoria: categoria,
+                                proyecto: proyecto.get('name'),
+                                hora: now.getHours(),
+                                minuto: now.getMinutes(),
+                                segundo: now.getSeconds(),
+                                mes: now.getMonth(),
+                                anyo: now.getFullYear(),
+                                //año: now.getFullYear(),
+                                //año: '2013',
+                                dia: now.getDate(),
+                                diaSemana: now.getDay(),
+                                fecha: now.toString(),
+                                usuario: userName
                             }
-                            client.createCollection(options, function (err, checkin) {
+                            //just pass the options to the addEntity method
+                            //to the collection and it is saved automatically
+                            checkin.addEntity(options, function (err, last, data) {
                                 if (err) {
-                                    error('could not make collection');
+                                	console.log('extra dog not saved or added to collection');
                                 }
                                 else {
-                                    //success('new Collection created');
-                                    now = new Date();
-                                    //create a new dog and add it to the collection
-                                    var options = {
-                                        name: now.toString() + '-' + proyecto.get('name') + '-' + userName,
-                                        categoria: category,
-                                        proyecto: proyecto.get('name'),
-                                        hora: now.getHours(),
-                                        minuto: now.getMinutes(),
-                                        segundo: now.getSeconds(),
-                                        mes: now.getMonth(),
-                                        año: now.getFullYear(),
-                                        dia: now.getDate(),
-                                        diaSemana: now.getDay(),
-                                        fecha: now.toString(),
-                                        usuario: userName
-                                    }
-                                    //just pass the options to the addEntity method
-                                    //to the collection and it is saved automatically
-                                    checkin.addEntity(options, function (err, last, data) {
+                                    var results = proyecto.get('cat' + categoria + '_results');
+                                    results = parseInt(results) + 1;
+                                    proyecto.set('cat' + categoria + '_results', results);
+                                    proyecto.save(function (err) {
                                         if (err) {
-                                            error('extra dog not saved or added to collection');
+                                        	console.log('proyect not saved');
                                         }
                                         else {
-                                            var results = proyecto.get('cat' + categoria + '_results');
-                                            results = parseInt(results) + 1;
-                                            proyecto.set('cat' + categoria + '_results', results);
-                                            proyecto.save(function (err) {
-                                                if (err) {
-                                                    //error('proyect not saved');
-                                                }
-                                                else {
-                                                    //success('proyect is saved');
-                                                    alert('Checked In');
-                                                    //$("#alerta").fadeOut();
-                                                }
-                                            });
+                                        	console.log('proyect is saved');
+                                        	MostrarMensaje("Resultado registrado correctamente", false);
+                                            //$("#alerta").fadeOut();
                                         }
                                     });
                                 }
                             });
                         }
                     });
-                } else { showError("El programa ha terminado.") }
-            } else { showError("El programa ha terminado.") }
+                    //}
+                    // });
+                } else { MostrarMensaje("El programa ha terminado.", true) }
+            } else { MostrarMensaje("El programa ha terminado.", true) }
         }
     });
 }
-*/
+
 $(document).on("pagebeforecreate", "#login", function () {
     /*if(window.localStorage.getItem('username')){
 		var userName = window.localStorage.getItem('username');
@@ -284,7 +397,7 @@ $(document).on("pagebeforecreate", "#login", function () {
     });
 });
 
-function ConstruirElementoLista(id, categoria, descripcion, imagen) {
+function ConstruirElementoListaProyecto(id, categoria, descripcion, imagen) {
     var liElemento = '<li data-id=' + id + '>' +
     //'<a href="#verPrograma?id=' + categoria + '">' +
 	'<a>' +
@@ -293,6 +406,37 @@ function ConstruirElementoLista(id, categoria, descripcion, imagen) {
      '<p>' + descripcion + '</p>' +
     '</a>' +
     '</li>';
+    return liElemento;
+}
+
+function ConstruirElementoListaResultados(id, categoria, descripcion, imagen) {
+    var liElemento = '<li data-id=' + id + '>' +
+    //'<a href="#verPrograma?id=' + categoria + '">' +
+	'<a>' +
+    '<img src=' + imagen + ' class="ui-li-thumb"/>' +
+    '<h3>' + categoria + '</h3>' +
+     '<p>' + descripcion + '</p>' +
+    '</a>' +
+    '</li>';
+    return liElemento;
+}
+
+function ConstruirBotonListaResultados(id, categoria, descripcion, imagen) {
+    var tema = "b";
+    if(id==2)
+    	tema="a";
+    else
+    	if(id==3)
+        	tema="d";
+        else
+        	if(id==4)
+            	tema="c";
+    var liElemento = '<a href="#" data-role="button" data-id="' + id + '" data-theme="' + tema + '">' +
+    '<img src=' + imagen + ' class="ui-li-thumb"/>' +
+    '<h2>' + categoria + '</h2>' +
+     //'<p>' + descripcion + '</p>' +
+    '</a>';
+    //console.log(liElemento);
     return liElemento;
 }
 
@@ -314,85 +458,37 @@ function CargarProyecto(indice) {
             descripcion = proyect.get('Descripcion');
             imagen = proyect.get('Imagen');
             pregunta = proyect.get('Pregunta');
-            $('#divTitulo').html(program);
+            //$('#divTitulo').html('<h3>' + program + '</h3>' + '<img src=' + imagen + ' width="100%"/>');
+            $('#divTitulo .ui-btn-text').text(program);
+            $('#divTituloImg').html('<img src=' + imagen + ' width="100%"/>');
             $('#divPregunta').html(pregunta);
             $('#divDescripcion').html(descripcion);
-
-            // $("#divPrograma .divProgramaBG").css('background-image', 'url(' + imagen + ')');
 
             contenido += '<ul data-role="listview" id="liOpciones">';
 
 
-            contenido += ConstruirElementoLista(1, proyect.get('cat1'),
+            contenido += ConstruirElementoListaProyecto(1, proyect.get('cat1'),
             		proyect.get('cat1_Descripcion'),
             		proyect.get("cat1IMG"));
 
-            contenido += ConstruirElementoLista(2, proyect.get('cat2'),
+            contenido += ConstruirElementoListaProyecto(2, proyect.get('cat2'),
             		proyect.get('cat2_Descripcion'),
             		proyect.get("cat2IMG"));
 
-            contenido += ConstruirElementoLista(3, proyect.get('cat3'),
+            contenido += ConstruirElementoListaProyecto(3, proyect.get('cat3'),
             		proyect.get('cat3_Descripcion'),
             		proyect.get("cat3IMG"));
 
-            contenido += ConstruirElementoLista(4, proyect.get('cat4'),
+            contenido += ConstruirElementoListaProyecto(4, proyect.get('cat4'),
             		proyect.get('cat4_Descripcion'),
             		proyect.get("cat4IMG"));
             contenido += '</ul>'
             $('#divOpciones').html(contenido);
-            $('#divOpciones').trigger("create");
-
-            //$('#divPrograma').trigger("create");
-
-            /*
-             $("#redC").append(proyect.get('cat1'));
-            $("#greenC").append(proyect.get('cat2'));
-            $("#yellowC").append(proyect.get('cat3'));
-            $("#blueC").append(proyect.get('cat4'));
-
-            question = proyect.get('Pregunta');
-            $("#descripcionP").append("<img src='images/botones/info.png' width='13px' /> información sobre el proyecto");
-            $("#okinfotext").append("comenzar");
-            $("#infoDescTitulo2").append(proyect.get('program'));
-            $("#infoDescPregunta2").append(question);
-            $("#infoDesc").append(proyect.get('Descripcion'));
-            $("#redInfo").append(proyect.get('cat1') + "</br><span id='redInfoDesc'>" + proyect.get('cat1_Descripcion') + "</span>");
-            $("#yellowInfo").append(proyect.get('cat2') + "</br><span id='yellowInfoDesc'>" + proyect.get('cat2_Descripcion') + "</span>");
-            $("#greenInfo").append(proyect.get('cat3') + "</br><span id='greenInfoDesc'>" + proyect.get('cat3_Descripcion') + "</span>");
-            $("#blueInfo").append(proyect.get('cat4') + "</br><span id='blueInfoDesc'>" + proyect.get('cat4_Descripcion') + "</span>");
-
-            $("#redInfoIMG").css('background-image', 'url(' + proyect.get("cat1IMG") + ')');
-            $("#greenInfoIMG").css('background-image', 'url(' + proyect.get("cat2IMG") + ')');
-            $("#yellowInfoIMG").css('background-image', 'url(' + proyect.get("cat3IMG") + ')');
-            $("#blueInfoIMG").css('background-image', 'url(' + proyect.get("cat4IMG") + ')'); 
-             
-           contenido = '<div data-role="collapsible" data-collapsed="false">' +
-		                    '<h3>Titulo</h3>' +
-		                    '<div>' + pregunta + '</div>' +
-		                '</div>';
-           
-           contenido += '<div data-role="collapsible" data-collapsed="false">' +
-			           '<h3>Descripci&oacute;n</h3>' +
-			           '<div>' + descripcion + '</div>' +
-			       '</div>';
-            
-           
-            contenido = '<a href="#verPrograma?id=' + name + '">' +
-				            '<img src=' + imagen + ' height="100"/>' +
-				            '<h3>' + descripcion + '</h3>' +
-				             '<p>' + pregunta + '</p>' +
-				         '</a>'
-            
-            contenido += '<ul data-role="listview"><li data-role="list-divider">Titulo</li>';
-            contenido += '<li>' + program + '</li>';
-            contenido += '<li data-role="list-divider">¿ Qu&eacute; analizamos?</li>';
-            contenido += '<li>' + pregunta + '</li>';
-            contenido += '<li data-role="list-divider">Descripci&oacute;n</li>';
-            contenido += '<li>' + descripcion + '</li>';
-            contenido += '</ul>'; */
-            //$('#infoDesc').html(descripcion);
-
-        }
+            //$('#divOpciones').trigger("create");
+            //$('#divTitulo').trigger("create");
+            $('#divPrograma').trigger("create");
+            $('#divTitulo').trigger();
+            }
     });
 }
 
@@ -405,7 +501,7 @@ $(document).on("pagebeforecreate", "#inicio", function () {
         proyects.resetPaging();
         proyects.fetch(function (err) {
             if (err) {
-                $("#divProyectos").html("No existen proyectos");
+                $("#divProyectos").html('<div data-role="collapsible" data-collapsed="false" data-content-theme="c"> <h3>No existen proyectos para analizar</h3></div>');
                 $('#divProyectos').trigger("create");
             }
             else {
@@ -415,7 +511,7 @@ $(document).on("pagebeforecreate", "#inicio", function () {
         });
     }
     else {
-        $("#divProyectos").html("No existen proyectos");
+        $("#divProyectos").html('<div data-role="collapsible" data-collapsed="false" data-content-theme="c"> <h3>No existen proyectos para analizar</h3></div>');
         $('#divProyectos').trigger("create");
     }
     if ((userName) && (userCount)) {
@@ -429,7 +525,6 @@ $(document).on("pagebeforecreate", "#inicio", function () {
         else
             $.mobile.changePage("#login", "slide", false, true);
     });
-
 });
 
 $(document).on("pagebeforechange", function (e, data) {
@@ -446,6 +541,8 @@ $(document).on("pagebeforechange", function (e, data) {
     }
 });
 
+
+
 $(document).on("pageshow", "#verPrograma", function (e, data) {
     /*    var url = $.url(document.location);
 	    var param1 = url.param("id");
@@ -460,26 +557,44 @@ $(document).on("pagebeforecreate", "#verPrograma", function (e, data) {
     });
 });
 
-$(document).on("pagebeforecreate", "#registrarResultados", function (e, data) {
+$(document).on("pagebeforeshow", "#registrarResultados", function (e, data) {
     var contenido = '';
     if (proyectoSel != null) {
-        contenido += '<div data-role="collapsible" data-collapsed="false">' +
-                 	 '<h3>' + proyectoSel.get('program') + '</h3>' +
-                 	 '<ul data-role="listview" id="liOpcionesReg">' +
-                 	 '<li data-role="list-divider">' +proyectoSel.get('Pregunta') + '</li>';
-        contenido += ConstruirElementoLista(1, proyectoSel.get('cat1'),
+        contenido += '<div data-role="collapsible" data-content-theme="c" data-collapsed="false">' +
+                 	 '<h3>' + proyectoSel.get('Pregunta') + '</h3>' +
+                 	 '<ul data-role="listview" id="liOpcionesReg">';
+        contenido += ConstruirElementoListaResultados(1, proyectoSel.get('cat1'),
         		proyectoSel.get('cat1_Descripcion'),
         		proyectoSel.get("cat1IMG"));
-        contenido += ConstruirElementoLista(2, proyectoSel.get('cat2'),
+        contenido += ConstruirElementoListaResultados(2, proyectoSel.get('cat2'),
         		proyectoSel.get('cat2_Descripcion'),
         		proyectoSel.get("cat2IMG"));
-        contenido += ConstruirElementoLista(3, proyectoSel.get('cat3'),
+        contenido += ConstruirElementoListaResultados(3, proyectoSel.get('cat3'),
         		proyectoSel.get('cat3_Descripcion'),
         		proyectoSel.get("cat3IMG"));
-        contenido += ConstruirElementoLista(4, proyectoSel.get('cat4'),
+        contenido += ConstruirElementoListaResultados(4, proyectoSel.get('cat4'),
         		proyectoSel.get('cat4_Descripcion'),
         		proyectoSel.get("cat4IMG"));
         contenido += '</ul></div>';
+        //alert(proyectoSel.get('name'));
+
+        /*
+         * 
+        
+        contenido += '<div data-role="controlgroup" id="divOpcionesReg">';
+        contenido += ConstruirBotonListaResultados(1, proyectoSel.get('cat1'),
+													proyectoSel.get('cat1_Descripcion'),
+													proyectoSel.get("cat1IMG"));
+        contenido += ConstruirBotonListaResultados(2, proyectoSel.get('cat2'),
+				proyectoSel.get('cat2_Descripcion'),
+				proyectoSel.get("cat2IMG"));
+        contenido += ConstruirBotonListaResultados(3, proyectoSel.get('cat3'),
+				proyectoSel.get('cat3_Descripcion'),
+				proyectoSel.get("cat3IMG"));
+        contenido += ConstruirBotonListaResultados(4, proyectoSel.get('cat4'),
+				proyectoSel.get('cat4_Descripcion'),
+				proyectoSel.get("cat4IMG"));
+        contenido += '</div>'; */
 
     }
     else {
@@ -487,14 +602,20 @@ $(document).on("pagebeforecreate", "#registrarResultados", function (e, data) {
     }
 
     $("#divRegResultados").html(contenido);
-    //$("#divRegResultados").trigger("create");
+    $("#divRegResultados").trigger("create");
     //console.log(contenido);
-    alert(contenido);
-    
+    //alert(contenido);
+
     $('#liOpcionesReg li').click(function () {
-        alert('Data-id: ' + $(this).attr('data-id') + ' IdProyecto: ' + id);
+        //alert('Data-id: ' + $(this).attr('data-id') + ' IdProyecto: ' + id);
+        doCheckIn(id, $(this).attr('data-id'));
     });
     
+    $('#divOpcionesReg a').click(function () {
+        alert('Data-id: ' + $(this).attr('data-id') + ' IdProyecto: ' + id);
+        //doCheckIn(id, $(this).attr('data-id'));
+    });
+
 });
 
 $(document).on("pagebeforecreate", "#registro", function () {
