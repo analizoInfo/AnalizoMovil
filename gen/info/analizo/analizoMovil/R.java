@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package info.analizo.analizomobile;
+package info.analizo.analizoMovil;
 
 public final class R {
     public static final class attr {

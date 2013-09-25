@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="info.analizo.analizomobile"
-    android:versionCode="1"
+    package="info.analizo.analizoMovil"
+    android:versionCode="2"
     android:versionName="1.0" >
 
+    
+    
      <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -21,10 +23,13 @@
         android:allowBackup="true"
         android:icon="@drawable/analizo"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+         >
         <activity
-            android:name="info.analizo.analizomobile.MainActivity"
-            android:label="@string/app_name" >
+            android:name="info.analizo.analizoMovil.MainActivity"
+            android:label="@string/app_name"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

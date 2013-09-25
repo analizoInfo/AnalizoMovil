@@ -1,0 +1,50 @@
+
+
+
+#login, #informacion {
+	background-image:url('../img/loginVertical.jpg');
+	background-position:center; 
+	background-repeat:no-repeat;
+	position:relative;		
+}
+
+#login #loginForm {
+	width: 90%;
+	margin:0 auto;
+	
+	padding:1%;
+	font-weight: bold;
+	color: #FFFFFF;
+    position:absolute;
+    bottom:0;
+   margin-bottom:20%;
+}
+
+#registro {
+	background-image:url('../img/registroVertical.jpg');
+	background-position:center; 
+	
+	position:relative;		
+}
+
+#registro #registroForm {
+	width: 90%;
+	margin:0 auto;	
+	padding:1%;
+	font-weight: bold;
+	color: #FFFFFF;
+    position:absolute;
+    bottom:0;
+   margin-bottom:20%;
+}
+
+
+#informacion #divInformacion {
+	width: 90%;
+	margin:0 auto;
+	margin-top:20%;
+	font-weight: bold;
+	background-color: #FFFFFF;
+	text-align: left;
+	padding: 0;
+}

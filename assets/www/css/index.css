@@ -1,62 +1,31 @@
 BODY {
 	
-	font-size: 15px;
+	/*font-size: 15px;*/
 }
 
-.ui-li-thumb { max-width: 160px; }
+
+.cabecera h1, .cabecera h2, .cabecera h3, .cabecera h4, .cabecera h5, .cabecera h6, 
+.cabecera .ui-btn-inner {  font-size: 20px !important;}
+
+.ui-li-thumb { max-width: 120px !important; left: 10px !important; top: 5px !important; }
+a.ui-link-inherit {padding-left: 140px !important;}
 
 a{
   	text-decoration: none;
   	color: #83b321;
   }
 
-
-
-#login, #informacion {
-	background-image:url('../img/login.jpg');
-	background-position:center; 
-	background-repeat:no-repeat;
-	position:relative;		
+.ui-header span
+{
+    font-size: 15px !important;
 }
 
-#login #loginForm {
-	width: 60%;
-	margin-left:20%;
-	margin-bottom:20%;
-	padding:1%;
-	font-weight: bold;
-	color: #FFFFFF;
-	position:absolute;
-	bottom: 0;
+
+#registro #registroForm a[data-role="button"], #login #loginForm a[data-role="button"]
+{
+    margin-top:25px;
 }
 
-#registro {
-	background-image:url('../img/registro.jpg');
-	background-position:center; 
-	
-	position:relative;		
-}
-
-#registro #registroForm {
-	width: 60%;
-	margin-left:20%;
-	margin-bottom:20%;
-	padding:1%;
-	font-weight: bold;
-	color: #FFFFFF;
-	position:absolute;
-	bottom: 0;
-}
-
-#informacion #divInformacion {
-	width: 90%;
-	margin:0 auto;
-	margin-top:20%;
-	font-weight: bold;
-	background-color: #FFFFFF;
-	text-align: left;
-	padding: 0;
-}
 #divInformacion #infoInfoDesc
 {
 	padding: 10px;
@@ -67,8 +36,17 @@ a{
 	padding:10px
 }
 
-#divProyectos ul
-{
-	padding-top: 2px;
-	padding-bottom: 5px;
+#liOpcionesReg li, #liProyectosActuales li {
+   min-height: 100px;
 }
+
+#liOpciones li , #liProyectosProximos li {
+   min-height: 80px;
+}
+
+#liOpciones li p, #liOpcionesReg li p, #liProyectosActuales li p, #liProyectosProximos li p,
+#liOpciones li h3, #liOpcionesReg li h3, #liProyectosActuales li h3, #liProyectosProximos li h3  {
+      white-space: normal !important;
+}
+
+.conPadding {padding-left: 130px !important;}

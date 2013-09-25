@@ -49,6 +49,15 @@ function onDeviceReady() {
                 //get a reference to the dog
                 var user = users.getNextEntity();
                 userCount = userCount + 1;
+                
+            }
+            window.sessionStorage.setItem("numUsuarios", userCount);
+            if (($.mobile.activePage.is('#inicio'))||
+            		($.mobile.activePage.is('#login'))){
+                userCount = window.sessionStorage.getItem("numUsuarios");
+                if ((userName) && (userCount)) {
+                    $("#divFooterInicio").html('<b>Hola ' + userName + '. En estos momentos hay ' + userCount + ' analistas en la comunidad.</b>');
+                }
             }
         }
     });
@@ -62,8 +71,40 @@ function onDeviceReady() {
         else {
             navigator.app.backHistory();
         }
-     }, false);
+    }, false);
+
+   
     
+    if (client.isLoggedIn()) {
+        var token = client.getToken();
+        if (token) {
+            userName = window.localStorage.getItem('username');
+            userCount = window.sessionStorage.getItem('numUsuarios');
+            console.log(userName + userCount);
+            //MostrarMensaje("Usuario ya logeado", false);
+            $.mobile.changePage("#inicio", "slide", false, true);
+            //if($.mobile.activePage.is('#login'))
+            //{ 
+                console.log('antes delay');
+                setTimeout(function () {
+                    navigator.splashscreen.hide();
+                    console.log('delay');
+                    //something you want delayed
+
+                }, 2000);
+                console.log('despues delay');
+            //}
+        }
+    }
+    else {
+        console.log('No logeado');
+        navigator.splashscreen.hide();
+    }
+
+	//while (!$.mobile.activePage.is('#inicio'))
+       
+	
+   
 }
 
 $(document).on("mobileinit", function () {
@@ -140,8 +181,7 @@ function CrearLista(data) {
 
     var lEnEmision;
     if (enEmision.length > 0) {
-       // lEnEmision = '<ul data-role="listview"><li data-role="list-divider">Ahora puedes analizar</li>';
-    	lEnEmision = '<div data-role="collapsible" data-collapsed="false" data-content-theme="c"> <h3>Ahora puedes analizar</h3><ul data-role="listview">'
+        lEnEmision = '<div data-role="collapsible" data-collapsed="false" data-content-theme="a"> <h3>Ahora puedes analizar</h3><ul data-role="listview" id="liProyectosActuales">'
         for (var i = 0; i < enEmision.length; i++) {
             var pro = enEmision[i];
             name = pro.get('name');
@@ -159,37 +199,29 @@ function CrearLista(data) {
         lEnEmision += '</ul></div>';
     }
     else
-        lEnEmision = '<div data-role="collapsible" data-collapsed="false" data-content-theme="c"> <h3>No existen proyectos para analizar en este horario</h3></div>';
+        lEnEmision = '<div data-role="collapsible" data-collapsed="false" data-content-theme="a"> <h3>No existen proyectos para analizar en este horario</h3></div>';
 
     var lEnFuturo;
     if (enFuturo.length > 0) {
-    	/*
-    	 * <div data-role="collapsible" data-collapsed="false"> <h3>Proximos analis</h3>
-                                
-            </div>
-    	 */
-    	
-        //lEnFuturo = '<ul data-role="listview"><li data-role="list-divider">Proximos analis</li>';
-    	lEnFuturo = '<div data-role="collapsible" data-collapsed="false" data-content-theme="c"> <h3>Proximos analis</h3><ul data-role="listview">';
+        lEnFuturo = '<div data-role="collapsible" data-collapsed="false" data-content-theme="a"> <h3>Proximos analis</h3><ul data-role="listview" id="liProyectosProximos">';
         for (var i = 0; i < enFuturo.length; i++) {
             var pro = enFuturo[i];
             name = pro.get('name');
             descripcion = pro.get('program');
             imagen = pro.get('Imagen');
             pregunta = pro.get('Pregunta');
-            lEnFuturo += '<li data-id=' + name + '>' +
-                    //'<a href="#verPrograma?id=' + name + '">' +
-            		'<a>' +
+            lEnFuturo += '<li data-id=' + name + ' data-icon="false">' +
+            		'<div class="conPadding">' +
                     '<img src=' + imagen + ' class="ui-li-thumb"/>' +
                     '<h3>' + descripcion + '</h3>' +
                      '<p>' + pregunta + '</p>' +
-                    '</a>' +
+                    '</div>' +
                     '</li>';
         }
         lEnFuturo += '</ul></div>';
     }
     else
-        lEnFuturo = '<div data-role="collapsible" data-collapsed="false" data-content-theme="c"> <h3>No existen proyectos proximamente</h3></div>';
+        lEnFuturo = '<div data-role="collapsible" data-collapsed="false" data-content-theme="a"> <h3>No existen proyectos proximamente</h3></div>';
     
     $("#divProyectos").html(lEnEmision + lEnFuturo); //
     $('#divProyectos').trigger("create");
@@ -229,7 +261,6 @@ function LogearUsuario(usuario, pasword, rec) {
 
     if (logged && (usuario == '')) {
         userName = window.localStorage.getItem('username');
-        //alert(userName);
         $.mobile.changePage("#inicio", "slide", false, true);
     }
     else {
@@ -237,7 +268,7 @@ function LogearUsuario(usuario, pasword, rec) {
         client.login(usuario, pasword,
              function (err) {
                  if (err) {
-                     alert('El usuario o contraseña no son correctos');
+                     alert('El usuario o password no son correctos');
                  }
                  else {
                      var token = client.token;
@@ -248,10 +279,9 @@ function LogearUsuario(usuario, pasword, rec) {
                          } else {
 
                              userName = user.get('username');
-                             if (rec) {
+                             //if (rec) {
                                  window.localStorage.setItem('username', userName);
-                                 //alert(window.localStorage.getItem('username'));
-                             }
+                             //}
                              $.mobile.changePage("#inicio", "slide", false, true);
                          }
                      });
@@ -263,13 +293,11 @@ function LogearUsuario(usuario, pasword, rec) {
 }
 
 function doCheckIn(indice, categoria) {
-    //$("#alerta").fadeIn();
-
     var proyect_load = {
         type: 'proyects',
         name: indice
     };
-
+    MostrarMensaje("Resultado registrado correctamente", false);
     now = new Date();
     client.getEntity(proyect_load, function (err, proyecto) {
         if (err) {
@@ -286,16 +314,11 @@ function doCheckIn(indice, categoria) {
             fin_p = '' + proyecto.get('HoraFin') + '' + proyecto.get('MinutoFin');
             if (parseInt(hora) >= parseInt(inicio_p)) {
                 if (parseInt(hora) <= parseInt(fin_p)) {
-                    /* client.getEntity(proyect_load, function (err, proyecto) {
-                         if (err) {
- 
-                         }
-                         else { */
-                    //aqui
                     var resultados = proyecto.get('Resultados');
                     var options = {
                         type: resultados
                     }
+                    
                     client.createCollection(options, function (err, checkin) {
                         if (err) {
                         	console.log('could not make collection');
@@ -337,16 +360,13 @@ function doCheckIn(indice, categoria) {
                                         }
                                         else {
                                         	console.log('proyect is saved');
-                                        	MostrarMensaje("Resultado registrado correctamente", false);
-                                            //$("#alerta").fadeOut();
+                                        	//MostrarMensaje("Resultado registrado correctamente", false);
                                         }
                                     });
                                 }
                             });
                         }
                     });
-                    //}
-                    // });
                 } else { MostrarMensaje("El programa ha terminado.", true) }
             } else { MostrarMensaje("El programa ha terminado.", true) }
         }
@@ -354,40 +374,6 @@ function doCheckIn(indice, categoria) {
 }
 
 $(document).on("pagebeforecreate", "#login", function () {
-    /*if(window.localStorage.getItem('username')){
-		var userName = window.localStorage.getItem('username');
-		alert(userName);
-		var opciones = {
-			    type:'user',
-			    name:userName
-			};
-		client.getEntity(opciones, function(err, usuario){
-	 		if (err){
-	 			
-	 		} else {
-	 			var proyect_day = usuario.get(now_day); 
-	 			LogearUsuario(usuario.get('Name'), usuario.get('Name'));
-	 		}
-		});
-	} 
-	var token =client.getToken();
-	if(token){
-		alert(token);
-		$.mobile.changePage("#inicio", "slide", false, true);
-	}
-	*/
-    if (window.localStorage.getItem('username')) {
-        /*
-		if(client.isLoggedIn()){
-			alert('logeado');
-				$.mobile.changePage("#inicio", "slide", false, true);
-		}
-		else
-			alert('No logeado');
-			*/
-    }
-
-
     $("#login #btnSubmit").click(function () {
         var login = $("#txtLogin").val();
         var pwd = $("#txtPassword").val();
@@ -398,20 +384,18 @@ $(document).on("pagebeforecreate", "#login", function () {
 });
 
 function ConstruirElementoListaProyecto(id, categoria, descripcion, imagen) {
-    var liElemento = '<li data-id=' + id + '>' +
-    //'<a href="#verPrograma?id=' + categoria + '">' +
-	'<a>' +
+    var liElemento = '<li data-id=' + id + ' data-icon="false">' +
+	'<div class="conPadding">' +
     '<img src=' + imagen + ' class="ui-li-thumb"/>' +
     '<h3>' + categoria + '</h3>' +
      '<p>' + descripcion + '</p>' +
-    '</a>' +
+    '</div>' +
     '</li>';
     return liElemento;
 }
 
 function ConstruirElementoListaResultados(id, categoria, descripcion, imagen) {
     var liElemento = '<li data-id=' + id + '>' +
-    //'<a href="#verPrograma?id=' + categoria + '">' +
 	'<a>' +
     '<img src=' + imagen + ' class="ui-li-thumb"/>' +
     '<h3>' + categoria + '</h3>' +
@@ -458,7 +442,6 @@ function CargarProyecto(indice) {
             descripcion = proyect.get('Descripcion');
             imagen = proyect.get('Imagen');
             pregunta = proyect.get('Pregunta');
-            //$('#divTitulo').html('<h3>' + program + '</h3>' + '<img src=' + imagen + ' width="100%"/>');
             $('#divTitulo .ui-btn-text').text(program);
             $('#divTituloImg').html('<img src=' + imagen + ' width="100%"/>');
             $('#divPregunta').html(pregunta);
@@ -484,8 +467,6 @@ function CargarProyecto(indice) {
             		proyect.get("cat4IMG"));
             contenido += '</ul>'
             $('#divOpciones').html(contenido);
-            //$('#divOpciones').trigger("create");
-            //$('#divTitulo').trigger("create");
             $('#divPrograma').trigger("create");
             $('#divTitulo').trigger();
             }
@@ -501,7 +482,7 @@ $(document).on("pagebeforecreate", "#inicio", function () {
         proyects.resetPaging();
         proyects.fetch(function (err) {
             if (err) {
-                $("#divProyectos").html('<div data-role="collapsible" data-collapsed="false" data-content-theme="c"> <h3>No existen proyectos para analizar</h3></div>');
+                $("#divProyectos").html('<div data-role="collapsible" data-collapsed="false" data-content-theme="a"> <h3>No existen proyectos para analizar</h3></div>');
                 $('#divProyectos').trigger("create");
             }
             else {
@@ -511,13 +492,20 @@ $(document).on("pagebeforecreate", "#inicio", function () {
         });
     }
     else {
-        $("#divProyectos").html('<div data-role="collapsible" data-collapsed="false" data-content-theme="c"> <h3>No existen proyectos para analizar</h3></div>');
+        $("#divProyectos").html('<div data-role="collapsible" data-collapsed="false" data-content-theme="a"> <h3>No existen proyectos para analizar</h3></div>');
         $('#divProyectos').trigger("create");
     }
+    
     if ((userName) && (userCount)) {
         $("#divFooterInicio").html('<b>Hola ' + userName + '. En estos momentos hay ' + userCount + ' analistas en la comunidad.</b>');
     }
-
+   /* else {
+        userCount = window.sessionStorage.getItem("numUsuarios");
+        userName = window.sessionStorage.getItem("userName");
+        $("#divFooterInicio").html('<b>Hola ' + userName + '. En estos momentos hay ' + userCount + ' analistas en la comunidad.</b>');
+    }
+ */   
+   
     $("#lnkCerrarSession").click(function () {
         client.logout();
         if (client.isLoggedIn())
@@ -525,6 +513,10 @@ $(document).on("pagebeforecreate", "#inicio", function () {
         else
             $.mobile.changePage("#login", "slide", false, true);
     });
+});
+
+$(document).on("pagecreate", "#inicio", function () {
+    
 });
 
 $(document).on("pagebeforechange", function (e, data) {
@@ -547,7 +539,7 @@ $(document).on("pageshow", "#verPrograma", function (e, data) {
     /*    var url = $.url(document.location);
 	    var param1 = url.param("id");
 	    alert(param1);*/
-
+    console.log("pageshow verPrograma");
 
 });
 
@@ -560,7 +552,7 @@ $(document).on("pagebeforecreate", "#verPrograma", function (e, data) {
 $(document).on("pagebeforeshow", "#registrarResultados", function (e, data) {
     var contenido = '';
     if (proyectoSel != null) {
-        contenido += '<div data-role="collapsible" data-content-theme="c" data-collapsed="false">' +
+        contenido += '<div data-role="collapsible" data-content-theme="a" data-collapsed="false">' +
                  	 '<h3>' + proyectoSel.get('Pregunta') + '</h3>' +
                  	 '<ul data-role="listview" id="liOpcionesReg">';
         contenido += ConstruirElementoListaResultados(1, proyectoSel.get('cat1'),
@@ -631,20 +623,33 @@ $(document).on("pagebeforecreate", "#registro", function () {
         var email = $("#txtEmail").val();
         var password = $("#txtPasswordReg").val();
         var confirmPassword = $("#txtConfirmPassword").val();
-        alert(password + ' Confirmar: ' + confirmPassword);
+        //alert(password + ' Confirmar: ' + confirmPassword);
         if (password == confirmPassword) {
-            client.signup(user, password, email, user,
-    			function (err, username) {
-    			    if (err) {
-    			        alert('user not created ' + err);
-    			    } else {
-    			        alert('user created');
-
-    			    }
-    			}
-    		);
+            if (user) {
+                if (email) {
+                    if (password) {
+                        client.signup(user, password, email, user,
+                            function (err, username) {
+                                if (err) {
+                                    MostrarMensaje('user not created ' + err, true);
+                                } else {
+                                    console.log('user created');
+                                    MostrarMensaje("Usuario creado correctamente", false);
+                                    $.mobile.changePage("#login", "slide", false, true);
+                                }
+                            }
+                        );
+                    } else {
+                        MostrarMensaje("El password no puede estar vacio", true);
+                    }
+                } else {
+                    MostrarMensaje("El Email no puede estar vacio", true);
+                }
+            } else {
+                MostrarMensaje("El nombre de usuario no puede estar vacio", true);
+            }
         } else {
-            alert("Las contraseñas no coinciden");
+            MostrarMensaje("Los Password no coinciden", true);
         }
     });
 });
