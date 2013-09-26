@@ -282,6 +282,8 @@ function LogearUsuario(usuario, pasword, rec) {
                              //if (rec) {
                                  window.localStorage.setItem('username', userName);
                              //}
+                             $("#txtLogin").val('');
+                             $("#txtPassword").val('');
                              $.mobile.changePage("#inicio", "slide", false, true);
                          }
                      });
@@ -381,6 +383,12 @@ $(document).on("pagebeforecreate", "#login", function () {
 
         LogearUsuario(login, pwd, rec);
     });
+
+    $('.menu-btn').on('touchend', function () {
+        $(this).removeClass("ui-btn-active");
+        console.log('removeClass("ui-btn-active")');
+    });
+
 });
 
 function ConstruirElementoListaProyecto(id, categoria, descripcion, imagen) {
@@ -511,7 +519,9 @@ $(document).on("pagebeforecreate", "#inicio", function () {
         if (client.isLoggedIn())
             alert('No se ha podido cerrar session');
         else
+        {
             $.mobile.changePage("#login", "slide", false, true);
+        }
     });
 });
 
