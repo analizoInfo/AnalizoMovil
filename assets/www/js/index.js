@@ -82,7 +82,7 @@ function onDeviceReady() {
             userCount = window.sessionStorage.getItem('numUsuarios');
             console.log(userName + userCount);
             //MostrarMensaje("Usuario ya logeado", false);
-            $.mobile.changePage("#inicio", "slide", false, true);
+            $.mobile.changePage("#inicio", "fade", false, true);
             //if($.mobile.activePage.is('#login'))
             //{ 
                 console.log('antes delay');
@@ -108,7 +108,7 @@ function onDeviceReady() {
 }
 
 $(document).on("mobileinit", function () {
-    $.mobile.defaultPageTransition = "slide";
+    $.mobile.defaultPageTransition = "fade";
     $.mobile.transitionFallbacks.slideout = "none";
 });
 
@@ -203,7 +203,7 @@ function CrearLista(data) {
 
     var lEnFuturo;
     if (enFuturo.length > 0) {
-        lEnFuturo = '<div data-role="collapsible" data-collapsed="false" data-content-theme="a"> <h3>Proximos analis</h3><ul data-role="listview" id="liProyectosProximos">';
+        lEnFuturo = '<div data-role="collapsible" data-collapsed="false" data-content-theme="a"> <h3>Pr&oacute;ximos an&aacute;lisis</h3><ul data-role="listview" id="liProyectosProximos">';
         for (var i = 0; i < enFuturo.length; i++) {
             var pro = enFuturo[i];
             name = pro.get('name');
@@ -261,7 +261,7 @@ function LogearUsuario(usuario, pasword, rec) {
 
     if (logged && (usuario == '')) {
         userName = window.localStorage.getItem('username');
-        $.mobile.changePage("#inicio", "slide", false, true);
+        $.mobile.changePage("#inicio", "fade", false, true);
     }
     else {
         client.logout();
@@ -284,7 +284,7 @@ function LogearUsuario(usuario, pasword, rec) {
                              //}
                              $("#txtLogin").val('');
                              $("#txtPassword").val('');
-                             $.mobile.changePage("#inicio", "slide", false, true);
+                             $.mobile.changePage("#inicio", "fade", false, true);
                          }
                      });
 
@@ -520,7 +520,7 @@ $(document).on("pagebeforecreate", "#inicio", function () {
             alert('No se ha podido cerrar session');
         else
         {
-            $.mobile.changePage("#login", "slide", false, true);
+            $.mobile.changePage("#login", "fade", false, true);
         }
     });
 });
@@ -555,7 +555,7 @@ $(document).on("pageshow", "#verPrograma", function (e, data) {
 
 $(document).on("pagebeforecreate", "#verPrograma", function (e, data) {
     $("#lnkComenzar").click(function () {
-        $.mobile.changePage("#registrarResultados", "slide", false, true);
+        $.mobile.changePage("#registrarResultados", "fade", false, true);
     });
 });
 
@@ -645,7 +645,7 @@ $(document).on("pagebeforecreate", "#registro", function () {
                                 } else {
                                     console.log('user created');
                                     MostrarMensaje("Usuario creado correctamente", false);
-                                    $.mobile.changePage("#login", "slide", false, true);
+                                    $.mobile.changePage("#login", "fade", false, true);
                                 }
                             }
                         );
@@ -653,13 +653,13 @@ $(document).on("pagebeforecreate", "#registro", function () {
                         MostrarMensaje("El password no puede estar vacio", true);
                     }
                 } else {
-                    MostrarMensaje("El Email no puede estar vacio", true);
+                    MostrarMensaje("El email no puede estar vacio", true);
                 }
             } else {
                 MostrarMensaje("El nombre de usuario no puede estar vacio", true);
             }
         } else {
-            MostrarMensaje("Los Password no coinciden", true);
+            MostrarMensaje("Los password no coinciden", true);
         }
     });
 });
