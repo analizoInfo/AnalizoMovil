@@ -3,40 +3,37 @@
 
 #login, #informacion {
 	background-image:url('../img/loginVertical.jpg');
-	background-position:center; 
-	background-repeat:no-repeat;
-	position:relative;		
-}
-
-#login #loginForm {
-	width: 90%;
-	margin:0 auto;
-	
-	padding:1%;
-	font-weight: bold;
-	color: #FFFFFF;
-    position:absolute;
-    bottom:0;
-   margin-bottom:20%;
+	background-repeat: no-repeat; 
+    background-position: center;
+    background-attachment: fixed;       
+    webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover; 
 }
 
 #registro {
 	background-image:url('../img/registroVertical.jpg');
-	background-position:center; 
-	
-	position:relative;		
+	background-repeat: no-repeat; 
+    background-position: center;
+    background-attachment: fixed;       
+    webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover; 
 }
 
-#registro #registroForm {
+
+
+#login #loginForm, #registro #registroForm {
 	width: 90%;
 	margin:0 auto;	
 	padding:1%;
 	font-weight: bold;
 	color: #FFFFFF;
     position:absolute;
-    bottom:0;
-   margin-bottom:20%;
 }
+
 
 
 #informacion #divInformacion {
@@ -47,4 +44,12 @@
 	background-color: #FFFFFF;
 	text-align: left;
 	padding: 0;
+}
+
+
+@media screen and (min-height:480px) {
+   #login #loginForm, #registro #registroForm {
+	   bottom:0;
+       margin-bottom:20%;
+    }
 }

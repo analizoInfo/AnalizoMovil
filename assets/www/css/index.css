@@ -1,11 +1,36 @@
+html {
+	-webkit-text-size-adjust: none;
+}
+
 BODY {
 	
 	/*font-size: 15px;*/
+	
+	min-width: 240px;
+    min-height: 320px;
 }
 
 
-.cabecera h1, .cabecera h2, .cabecera h3, .cabecera h4, .cabecera h5, .cabecera h6, 
-.cabecera .ui-btn-inner {  font-size: 20px !important;}
+@media screen and (max-width:380px) {
+   .cabecera h1, .cabecera h2, .cabecera h3, .cabecera h4, .cabecera h5, .cabecera h6, 
+	.cabecera .ui-btn-inner {  font-size: 14px !important;}
+
+	.ui-header span
+	{
+    	font-size: 10px !important;
+	}
+}
+
+@media screen and (min-width:380px) {
+   .cabecera h1, .cabecera h2, .cabecera h3, .cabecera h4, .cabecera h5, .cabecera h6, 
+	.cabecera .ui-btn-inner {  font-size: 20px !important;}
+
+	.ui-header span
+	{
+    	font-size: 15px !important;
+	}
+}
+
 
 .ui-li-thumb { max-width: 120px !important; left: 10px !important; top: 5px !important; }
 a.ui-link-inherit {padding-left: 140px !important;}
@@ -15,10 +40,6 @@ a{
   	color: #83b321;
   }
 
-.ui-header span
-{
-    font-size: 15px !important;
-}
 
 
 #registro #registroForm a[data-role="button"], #login #loginForm a[data-role="button"]
