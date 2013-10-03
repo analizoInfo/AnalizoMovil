@@ -558,10 +558,14 @@ $(document).on("pagebeforecreate", "#verPrograma", function (e, data) {
 $(document).on("pagebeforeshow", "#registrarResultados", function (e, data) {
     var contenido = '';
     if (proyectoSel != null) {
-
-        contenido += '<span class="ui-collapsible-heading-toggle ui-btn ui-fullsize ui-btn-icon-left ui-btn-up-c" data-theme="c">Estamos analizando ' +
-                     +proyectoSel.get('OnChannel') + '</span>';
-
+    	var canal = proyectoSel.get('OnChannel');
+    	if(canal)
+    	{
+    		canal = "Estamos analizando ".concat(canal);
+    		contenido += '<span class="ui-collapsible-heading-toggle ui-btn ui-fullsize ui-btn-icon-left ui-btn-up-c" data-theme="c">' 
+                     + canal + '</span>';
+    	}
+        console.log(canal);
         contenido += '<div data-role="collapsible" data-content-theme="a" data-collapsed="false">' +
                  	 '<h3>' + proyectoSel.get('Pregunta') + '</h3>' +
                  	 '<ul data-role="listview" id="liOpcionesReg">';
