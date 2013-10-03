@@ -44,7 +44,7 @@ function onDeviceReady() {
         if (err) {
             alert('could not get all channels');
         } else {
-            //we got 50 channels, now display the Entities:
+            userCount = 0;
             while (users.hasNextEntity()) {
                 //get a reference to the dog
                 var user = users.getNextEntity();
@@ -101,8 +101,9 @@ function onDeviceReady() {
         navigator.splashscreen.hide();
     }
 
-	//while (!$.mobile.activePage.is('#inicio'))
-       
+    if (parseFloat(window.device.version) === 7.0) {
+        document.body.style.marginTop = "20px";
+    }
 	
    
 }
@@ -507,12 +508,7 @@ $(document).on("pagebeforecreate", "#inicio", function () {
     if ((userName) && (userCount)) {
         $("#divFooterInicio").html('<b>Hola ' + userName + '. En estos momentos hay ' + userCount + ' analistas en la comunidad.</b>');
     }
-   /* else {
-        userCount = window.sessionStorage.getItem("numUsuarios");
-        userName = window.sessionStorage.getItem("userName");
-        $("#divFooterInicio").html('<b>Hola ' + userName + '. En estos momentos hay ' + userCount + ' analistas en la comunidad.</b>');
-    }
- */   
+ 
    
     $("#lnkCerrarSession").click(function () {
         client.logout();
@@ -562,6 +558,10 @@ $(document).on("pagebeforecreate", "#verPrograma", function (e, data) {
 $(document).on("pagebeforeshow", "#registrarResultados", function (e, data) {
     var contenido = '';
     if (proyectoSel != null) {
+
+        contenido += '<span class="ui-collapsible-heading-toggle ui-btn ui-fullsize ui-btn-icon-left ui-btn-up-c" data-theme="c">Estamos analizando ' +
+                     +proyectoSel.get('OnChannel') + '</span>';
+
         contenido += '<div data-role="collapsible" data-content-theme="a" data-collapsed="false">' +
                  	 '<h3>' + proyectoSel.get('Pregunta') + '</h3>' +
                  	 '<ul data-role="listview" id="liOpcionesReg">';
@@ -623,7 +623,7 @@ $(document).on("pagebeforeshow", "#registrarResultados", function (e, data) {
 $(document).on("pagebeforecreate", "#registro", function () {
 
     if (userCount) {
-        $("#divFooterRegistro").html('<h3>En estos momentos hay ' + userCount + ' analistas en la comunidad.</h3>');
+        $("#divFooterRegistro").html('<b>En estos momentos hay ' + userCount + ' analistas en la comunidad.</b>');
     }
 
     $("#registro #btnSubmitReg").on("touchstart", function (e) {

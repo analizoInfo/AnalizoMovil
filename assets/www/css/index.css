@@ -10,15 +10,20 @@ BODY {
     min-height: 320px;
 }
 
-
 @media screen and (max-width:380px) {
    .cabecera h1, .cabecera h2, .cabecera h3, .cabecera h4, .cabecera h5, .cabecera h6, 
 	.cabecera .ui-btn-inner {  font-size: 14px !important;}
-
 	.ui-header span
 	{
     	font-size: 10px !important;
 	}
+
+    .conPadding {padding-left: 90px !important;}
+    .ui-li-thumb { max-width: 80px !important; left: 10px !important; top: 5px !important; }
+    a.ui-link-inherit {padding-left: 100px !important;}
+
+    #divFooterInicio b, #divFooterRegistro b, #divFooterReg b, #divFooterPrograma b  {  font-size: 10px !important;}
+
 }
 
 @media screen and (min-width:380px) {
@@ -29,11 +34,16 @@ BODY {
 	{
     	font-size: 15px !important;
 	}
+
+    .conPadding {padding-left: 130px !important;}
+
+    .ui-li-thumb { max-width: 120px !important; left: 10px !important; top: 5px !important; }
+    a.ui-link-inherit {padding-left: 140px !important;}
+    
+
 }
 
 
-.ui-li-thumb { max-width: 120px !important; left: 10px !important; top: 5px !important; }
-a.ui-link-inherit {padding-left: 140px !important;}
 
 a{
   	text-decoration: none;
@@ -45,17 +55,18 @@ a{
 #registro #registroForm a[data-role="button"], #login #loginForm a[data-role="button"]
 {
     margin-top:25px;
+    margin-bottom:25px;
 }
 
-#divInformacion #infoInfoDesc
+#divInformacion #infoInfoDesc, #inicio #divFooterInicio b, #registro #divFooterRegistro b
 {
 	padding: 10px;
 }
 
-#inicio #divFooterInicio
-{
-	padding:10px
-}
+
+[data-role=footer] { text-align:center;}
+
+
 
 #liOpcionesReg li, #liProyectosActuales li {
    min-height: 100px;
@@ -65,9 +76,10 @@ a{
    min-height: 80px;
 }
 
+.ui-mobile .ui-page .ui-content .ui-collapsible .ui-collapsible-heading .ui-btn-text,
+.ui-title, 
 #liOpciones li p, #liOpcionesReg li p, #liProyectosActuales li p, #liProyectosProximos li p,
 #liOpciones li h3, #liOpcionesReg li h3, #liProyectosActuales li h3, #liProyectosProximos li h3  {
       white-space: normal !important;
 }
 
-.conPadding {padding-left: 130px !important;}

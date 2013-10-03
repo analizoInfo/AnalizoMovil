@@ -1,43 +1,45 @@
 
 
-#login, #informacion {
-	background-image:url('../img/login.jpg');
-	background-repeat: no-repeat; 
-    background-position: center;
-    background-attachment: fixed;       
-    webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover; 	
-}
-
-#login #loginForm, #registro #registroForm {
-	width: 90%;
-	margin:0 auto;	
-	padding:1%;
-	font-weight: bold;
-	color: #FFFFFF;
-    position:absolute;
-}
-
-#registro {
-	background-image:url('../img/registro.jpg');
-	background-repeat: no-repeat; 
-    background-position: center;
-    background-attachment: fixed;       
-    webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover; 		
+#login, #informacion
+{
+   	background: url('../img/login.jpg') center center no-repeat scroll;
 }
 
 
-#informacion #divInformacion {
-	width: 90%;
-	margin:0 auto;
-	margin-top:10%;
-	font-weight: bold;
-	background-color: #FFFFFF;
-	text-align: left;
-	padding: 0;
+#registro
+{
+    background: url('../img/registro.jpg') center center no-repeat scroll;
 }
+
+
+#login, #informacion,  #registro{
+-webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+
+    #login #loginForm, #registro #registroForm
+    {
+        width: 90%;
+        margin: 0 auto;
+        padding: 1%;
+        font-weight: bold;
+        color: #FFFFFF;
+        position: absolute;
+    }
+
+
+    #informacion #divInformacion
+    {
+        width: 90%;
+        margin: 0 auto;
+        margin-top: 10%;
+        font-weight: bold;
+        background-color: #FFFFFF;
+        text-align: left;
+        padding: 0;
+    }
+
+[data-role=page] { margin-bottom:20px;}

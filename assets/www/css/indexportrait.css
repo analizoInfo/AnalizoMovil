@@ -1,29 +1,21 @@
-
-
-
-#login, #informacion {
-	background-image:url('../img/loginVertical.jpg');
-	background-repeat: no-repeat; 
-    background-position: center;
-    background-attachment: fixed;       
-    webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover; 
-}
-
-#registro {
-	background-image:url('../img/registroVertical.jpg');
-	background-repeat: no-repeat; 
-    background-position: center;
-    background-attachment: fixed;       
-    webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover; 
+#login, #informacion
+{
+   	background: url('../img/loginVertical.jpg') center center no-repeat scroll;
 }
 
 
+#registro
+{
+    background: url('../img/registroVertical.jpg') center center no-repeat scroll;
+}
+
+
+#login, #informacion,  #registro{
+-webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
 
 #login #loginForm, #registro #registroForm {
 	width: 90%;
@@ -47,9 +39,14 @@
 }
 
 
-@media screen and (min-height:480px) {
+
+@media screen and (min-height:481px) {
    #login #loginForm, #registro #registroForm {
 	   bottom:0;
        margin-bottom:20%;
     }
+}
+
+@media screen and (max-height:480px) {
+   [data-role=page] { margin-bottom:20px;}
 }

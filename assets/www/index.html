@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, height=device-height, target-densitydpi=device-dpi" />
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <link rel="stylesheet" media="all and (orientation:portrait)" href="css/indexportrait.css">  
     <link rel="stylesheet" media="all and (orientation:landscape)" href="css/indexlandscape.css">
@@ -35,7 +35,7 @@
                 <a data-role="button" id="btnSubmit" data-theme="f">Iniciar</a>
             </form>          
         </div>
-        <footer data-role="footer" data-position="fixed">
+        <footer data-role="footer" data-position="fixed" data-tap-toggle="false">
             <h3>analizo.info</h3>
         </footer>
     </div>
@@ -55,7 +55,7 @@
                     <p>Con esta aplicación podrás acceder a proyectos de análisis de contenidos de TV. Tus análisis supondrán una contribución muy importante. ¡Anímate y analiza!</p>
                 </div>
             </div>
-            <footer data-role="footer" data-position="fixed">
+            <footer data-role="footer" data-position="fixed" data-tap-toggle="false">
                 <h3>analizo.info</h3>
             </footer>
         </div>
@@ -93,14 +93,14 @@
             <div id="divProyectos">
             </div>
         </div>
-        <footer data-role="footer" data-position="fixed" id="divFooterInicio">
+        <footer data-role="footer" data-position="fixed" id="divFooterInicio" data-tap-toggle="false">
             <h3>analizo.info</h3>
         </footer>
     </div>
 
     <div data-role="page" id="verPrograma">
         <header data-role="header" data-theme="e" class="cabecera">
-            <h3>Información Proyecto</h3>
+            <h3>Información</h3>
             <a href="#inicio" data-icon="home">Proyectos</a>
             <a id="lnkComenzar" data-icon="check">Analizar</a>
         </header>
@@ -126,14 +126,14 @@
             </div>
       
 		</div>
-        <footer data-role="footer" data-position="fixed" id="divFooterPrograma">
-            <h3>analizo.info</h3>
+        <footer data-role="footer" data-position="fixed" id="divFooterPrograma" data-tap-toggle="false">
+            <b>analizo.info</b>
         </footer>
     </div>
     
     <div data-role="page" id="registrarResultados">
      <header data-role="header" data-theme="e" class="cabecera">
-            <h3>Análisis Proyecto</h3>
+            <h3>Análisis</h3>
             <a href="#inicio" data-icon="home">Proyectos</a>
             <a href="#verPrograma" data-rel="back" data-icon="info">Info Proyecto</a>
         </header>
@@ -141,8 +141,8 @@
             
             
         </div>		
-        <footer data-role="footer" data-position="fixed" id="divFooterReg">
-            <h3>analizo.info</h3>
+        <footer data-role="footer" data-position="fixed" id="divFooterReg" data-tap-toggle="false">
+            <b>analizo.info</b>
         </footer>
     </div>
 </body>
