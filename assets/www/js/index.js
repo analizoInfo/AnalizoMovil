@@ -329,6 +329,7 @@ function doCheckIn(indice, categoria) {
                         else {
                            
                             console.log('createCollection');
+                            var networkState = navigator.network.connection.type;
                             now = new Date();
                             //create a new dog and add it to the collection
                             var options = {
@@ -340,6 +341,7 @@ function doCheckIn(indice, categoria) {
                                 segundo: now.getSeconds(),
                                 mes: now.getMonth(),
                                 anyo: now.getFullYear(),
+                                connection: networkState,
                                 //año: now.getFullYear(),
                                 //año: '2013',
                                 dia: now.getDate(),
